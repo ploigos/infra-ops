@@ -2,7 +2,7 @@
 
 1. 
     ```shell
-    git clonehttps://github.com/redhat-actions/openshift-actions-runner-chart.git
+    git clone https://github.com/redhat-actions/openshift-actions-runner-chart.git
     ``` 
 
 2. Copy in values.yml from this repo
