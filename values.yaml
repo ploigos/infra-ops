@@ -21,7 +21,7 @@ secretName: "github-pat"
 # Modify this to store multiple PATs in one secret.
 secretKey: "github-pat"
 # The PAT itself - must be set if the secret is being created.
-githubPat: ""
+githubPat: "MY_TEST_PAT"
 
 ### End PAT Auth
 
