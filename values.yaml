@@ -1,6 +1,6 @@
 appName: actions-runner
 
-runnerImage: quay.io/dwinchell_redhat/python-runner
+runnerImage: quay.io/aagreen/buildah-runner
 runnerTag: latest
 
 # GitHub organization or user. Required.
@@ -75,7 +75,7 @@ replicas: 1
 # i.e. will quit and restart after running one job
 ephemeral: false
 
-serviceAccountName: default
+serviceAccountName: buildah-sa
 
 # Adjust requests and limits depending on your resources,
 # and how heavyweight your workloads are.
