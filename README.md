@@ -70,4 +70,4 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 8. Each time the PSR is executed, it performs some custom logic specific to the step. This might include executing another tool like buildah or Maven and/or communicating with an external service like Artifactory or Anchore.
 9. Each time the PSR is executed, it writes the results of the step to a working directory. The last step publishes a report of the results.
 10. Two of the steps build and push a new image of the application. Another step (not shown) creates or updates an ArgoCD Application which deploys the app to OpenShift.
-11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new process. This resets the state (filesystem) of the runner for the next run.
+11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new container. This resets the state (filesystem) of the runner for the next run.
