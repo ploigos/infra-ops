@@ -82,8 +82,6 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 9. Each time the PSR is executed, it writes the results of the step to a working directory. The last step publishes a report of the results.
 10. Two of the steps build and push a new image of the application. Another step (not shown) creates or updates an ArgoCD Application which deploys the app to OpenShift.
 11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new container. This resets the state (filesystem) of the runner for the next run.
-<<<<<<< HEAD
-=======
 
 # How-To
 
@@ -93,4 +91,4 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
   * ` oc exec vault-0 -n vault -- vault kv get secret/webapp/config`
 * Test that vault is working properly
   * Follow [these instructions](https://learn.hashicorp.com/tutorials/vault/kubernetes-openshift?in=vault/kubernetes#deployment-request-secrets-directly-from-vault)
->>>>>>> 2d77bab (Updated helm install script)
+
