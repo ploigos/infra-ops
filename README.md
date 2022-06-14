@@ -8,11 +8,13 @@ You must have these tools installed to complete the setup:
 - [Helm](https://helm.sh/docs/intro/install/) (version 3.6 or greater) - Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.
 
 ## Install Steps
-
-1. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
+<<<<<<< HEAD
+1. Login to openshift
+   * `oc login --token=<YOUR TOKEN> --server=<YOUR SERVER>` (Or username and password instead of token)
+2. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
    * `oc create -f bootstrap/`
-2. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
-3. Run the Helm install script
+3. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
+4. Run the Helm install script
    * `./install-helm.sh`
 
 # GitOps Application Deployments
