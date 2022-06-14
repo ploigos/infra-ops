@@ -1,9 +1,19 @@
 This GitOps repository is used to deploy the infrastructure for running Ploigos based pipelines using GitHub Actions.
 
 # Setup Instructions
+
+## Prerequisites
+You must have these tools installed to complete the setup:
+- [OpenShift cli](https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html) - Create applications and manage OpenShift Container Platform projects from a terminal.
+- [Helm](https://helm.sh/docs/intro/install/) (version 3.6 or greater) - Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.
+
+## Install Steps
+
 1. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
    * `oc create -f bootstrap/`
 2. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
+3. Run the Helm install script
+   * `./install-helm.sh`
 
 # GitOps Application Deployments
 1. Install the Application configuration yaml file pointing to the Application GitOps repository.
