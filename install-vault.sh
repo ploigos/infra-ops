@@ -22,5 +22,31 @@ if [ ${HELM_VERSION_RETURN_CODE} != 0 ]; then
 fi
 # Maybe someday check actual Helm version number
 
+# Create vault project if needed
+#set +e
+#oc new-project vault
+#set -e
+#oc project vault
+
+# Add the Helm repo for Vault
+helm repo add hashicorp https://helm.releases.hashicorp.com
+helm repo update
+
+# Install Vault
+helm install vault hashicorp/vault \
+    --create-namespace \
+    --wait \
+    --set "global.openshift=true" \
+    --set "server.dev.enabled=true"
+
+# Configure Kubernetes authentication
+oc exec -it vault-0 -- vault auth enable kubernetes
+# Evaluate KUBERNETES_PORT_443_TCP_ADDR within the Pod
+JWT=$(oc exec -it vault-0 -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+oc exec -it vault-0 -- vault write auth/kubernetes/config \
+                           token_reviewer_jwt=${JWT} \
+                           kubernetes_host="https://openshift.default.svc.cluster.local:443" \
+                           kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
 # Clean up the temporary directory
 cd ${START_DIR}
