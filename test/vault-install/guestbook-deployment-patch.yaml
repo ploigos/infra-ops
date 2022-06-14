@@ -1,0 +1,8 @@
+---
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "guestbook"
+        vault.hashicorp.com/agent-inject-secret-guestbook-db-conf.txt: "internal/data/mongodb/username-password"
