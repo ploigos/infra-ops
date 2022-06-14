@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guestbook
+  labels:
+    app: guestbook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guestbook
+  template:
+    metadata:
+      annotations:
+      labels:
+         app: guestbook
+    spec:
+      serviceAccountName: guestbook-sa
+      containers:
+      - name: guestbook
+        image: remkohdev/guestbook-nodejs:mongo
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 3000

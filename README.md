@@ -1,9 +1,20 @@
 This GitOps repository is used to deploy the infrastructure for running Ploigos based pipelines using GitHub Actions.
 
 # Setup Instructions
-1. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
+
+## Prerequisites
+You must have these tools installed to complete the setup:
+- [OpenShift cli](https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html) - Create applications and manage OpenShift Container Platform projects from a terminal.
+- [Helm](https://helm.sh/docs/intro/install/) (version 3.6 or greater) - Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.
+
+## Install Steps
+1. Login to openshift
+   * `oc login --token=<YOUR TOKEN> --server=<YOUR SERVER>` (Or username and password instead of token)
+2. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
    * `oc create -f bootstrap/`
-2. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
+3. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
+4. Run the Helm install script
+   * `./install-helm.sh`
 
 # GitOps Application Deployments
 1. Install the Application configuration yaml file pointing to the Application GitOps repository.
@@ -71,3 +82,13 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 9. Each time the PSR is executed, it writes the results of the step to a working directory. The last step publishes a report of the results.
 10. Two of the steps build and push a new image of the application. Another step (not shown) creates or updates an ArgoCD Application which deploys the app to OpenShift.
 11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new container. This resets the state (filesystem) of the runner for the next run.
+
+# How-To
+
+* Create a secret in Vault
+  * `oc exec vault-0 -n vault -- vault kv put secret/webapp/config username="example" password="example"`
+* Get the vale of a secret in Vault
+  * ` oc exec vault-0 -n vault -- vault kv get secret/webapp/config`
+* Test that vault is working properly
+  * Follow [these instructions](https://learn.hashicorp.com/tutorials/vault/kubernetes-openshift?in=vault/kubernetes#deployment-request-secrets-directly-from-vault)
+
