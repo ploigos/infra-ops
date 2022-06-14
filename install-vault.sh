@@ -22,12 +22,6 @@ if [ ${HELM_VERSION_RETURN_CODE} != 0 ]; then
 fi
 # Maybe someday check actual Helm version number
 
-# Create vault project if needed
-#set +e
-#oc new-project vault
-#set -e
-#oc project vault
-
 # Add the Helm repo for Vault
 helm repo add hashicorp https://helm.releases.hashicorp.com
 helm repo update
