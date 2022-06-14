@@ -36,8 +36,7 @@ helm repo update
 helm install vault hashicorp/vault \
     --create-namespace \
     --wait \
-    --set "global.openshift=true" \
-    --set "server.dev.enabled=true"
+    -f ${SCRIPT_DIR}/vault-values.yaml
 
 # Configure Kubernetes authentication
 oc exec -it vault-0 -- vault auth enable kubernetes
