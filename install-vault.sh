@@ -20,7 +20,7 @@ if [ ${HELM_VERSION_RETURN_CODE} != 0 ]; then
   echo "SCRIPT FAILED! - You must have helm cli version ${MIN_REQUIRED_HELM_VERSION} or greater installed to run this script"
   exit 1
 fi
-# Maybe someday check version
+# Maybe someday check actual Helm version number
 
 # Clean up the temporary directory
 cd ${START_DIR}
