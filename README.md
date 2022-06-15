@@ -18,7 +18,9 @@ You must have these tools installed to complete the setup:
 
 # GitOps Application Deployments
 1. Install the Application configuration yaml file pointing to the Application GitOps repository.
-   * `oc create -f java-github-example-app.yaml`
+   * `oc create -f java-github-example-app.yaml` 
+2. Install Application External Secrets
+   * `oc apply -f applications/external-secrets-app.yaml`
 
 # Design
 
@@ -84,11 +86,11 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new container. This resets the state (filesystem) of the runner for the next run.
 
 # How-To
-
 * Create a secret in Vault
   * `oc exec vault-0 -n vault -- vault kv put secret/webapp/config username="example" password="example"`
 * Get the vale of a secret in Vault
   * ` oc exec vault-0 -n vault -- vault kv get secret/webapp/config`
 * Test that vault is working properly
   * Follow [these instructions](https://learn.hashicorp.com/tutorials/vault/kubernetes-openshift?in=vault/kubernetes#deployment-request-secrets-directly-from-vault)
+
 
