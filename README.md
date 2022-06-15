@@ -13,12 +13,21 @@ You must have these tools installed to complete the setup:
 2. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
    * `oc create -f bootstrap/`
 3. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
-4. Run the Helm install script
-   * `./install-helm.sh`
+4. Run the Vault install script
+   * `./install-vault.sh`
+5. Install GitHub Runners
+   * TBD
+6. In the GitHub repository for the spring-petclinic example app, create or update the GitHub Actions secrets used by the ploigos workflow.
+   * Browse to https://github.com/ploigos/spring-petclinic/settings/secrets/actions
+   * Create or update these secrets:
+     * *ARGOCDSECRET* - The password for the admin user of the ArgoCD instance running in the devsecops namespace of the OpenShift cluster we just installed. This will have to be updated every time we do the steps above. You can get this value with `oc get secret ploigos-service-account-credentials -n devsecops -o yaml | yq .data.password | base64 -d && echo`
+     * *GITUSER* - The username that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we create a new service account or fork the repo into a new organization. The value should be the username of a service account that was created within GitHub for this purpose.
+     * *GITPASSWORD* - The password that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we change the password in GitHub or start using a new service account. The value should be the password for a service account that was created within GitHub for this purpose.
+7. Install the External Secrets Operator. This command creates ArgoCD Application CR, which causes ArgoCD to install the operator.
+   * `oc apply -f applications/external-secrets-app.yaml`
 
-# GitOps Application Deployments
-1. Install the Application configuration yaml file pointing to the Application GitOps repository.
-   * `oc create -f java-github-example-app.yaml`
+Note: 
+> Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click on the Run workflow dropdown, leave the main branch selected, and select Run workflow.
 
 # Design
 
@@ -40,6 +49,7 @@ The table below lists the components that this repository deploys or uses.
 | java-github-example image                                                                                              | Container Image | The workflow in the upstream java-github-example source repository publishes its image to Quay.io. New deployments of the example application must provide a place to push the image. This can be a free Quay.io repo.                                                                                                                                                                       |
 | [java-github-example-ops](https://github.com/ploigos/java-github-example-ops)                                          | Git Repository  | The GitOps repository for java-github-example. Contains a helm chart tha is used to deploy the application. During the CI/CD workflow, PSR creates an ArgoCD Application CR referencing the chart. ArgoCD invokes helm when it syncs the Application.                                                                                                                                        |
 | [openshift-actions-runner-chart](https://github.com/ploigos/openshift-actions-runner-chart/)                           | Git Repository  | Contains Helm chart that deploys the GitHub Actions Runner. An Application CR in this repository references it.                                                                                                                                                                                                                                                                              |
+
 
 ## GitOps Workflow
 This repository is used to deploy infrastructure using a GitOps workflow. This diagram shows what happens when an
@@ -84,11 +94,11 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new container. This resets the state (filesystem) of the runner for the next run.
 
 # How-To
-
 * Create a secret in Vault
   * `oc exec vault-0 -n vault -- vault kv put secret/webapp/config username="example" password="example"`
 * Get the vale of a secret in Vault
   * ` oc exec vault-0 -n vault -- vault kv get secret/webapp/config`
 * Test that vault is working properly
   * Follow [these instructions](https://learn.hashicorp.com/tutorials/vault/kubernetes-openshift?in=vault/kubernetes#deployment-request-secrets-directly-from-vault)
+
 
