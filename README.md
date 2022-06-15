@@ -17,13 +17,13 @@ You must have these tools installed to complete the setup:
    * `./install-vault.sh`
 5. Install GitHub Runners
    * TBD
-6. In the GitHub repository for the spring-petclinic example app, create or update the GitHub Actions secrets used by the ploigos workflow
+6. In the GitHub repository for the spring-petclinic example app, create or update the GitHub Actions secrets used by the ploigos workflow.
    * Browse to https://github.com/ploigos/spring-petclinic/settings/secrets/actions
-   * Create or update these secrets
-     * ARGOCDSECRET - The password for the admin user of the ArgoCD instance running in the devsecops namespace of the OpenShift cluster we just installed. This will have to be updated every time we do the steps above. You can get this value with `oc get secret ploigos-service-account-credentials -n devsecops -o yaml | yq .data.password | base64 -d && echo`
-     * GITUSER - The username that the PSR should use to clone and push to the workflow, application and -ops repos. The value should be the username of a service account that was created within GitHub for this purpose. This only needs to be updated when you create a new service account or fork the repo into a new organization.
-     * GITPASSWORD - The password that the PSR should use to clone and push to the workflow, application and -ops repos. Use the value should be the password for a service account that was created within GitHub for this purpose. This only needs to be updated when we change the password in GitHub or start using a new service account.
-7. Install Application External Secrets
+   * Create or update these secrets:
+     * *ARGOCDSECRET* - The password for the admin user of the ArgoCD instance running in the devsecops namespace of the OpenShift cluster we just installed. This will have to be updated every time we do the steps above. You can get this value with `oc get secret ploigos-service-account-credentials -n devsecops -o yaml | yq .data.password | base64 -d && echo`
+     * *GITUSER* - The username that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we create a new service account or fork the repo into a new organization. The value should be the username of a service account that was created within GitHub for this purpose.
+     * *GITPASSWORD* - The password that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we change the password in GitHub or start using a new service account. The value should be the password for a service account that was created within GitHub for this purpose.
+7. Install the External Secrets Operator. This command creates ArgoCD Application CR, which causes ArgoCD to install the operator.
    * `oc apply -f applications/external-secrets-app.yaml`
 
 Note: 
