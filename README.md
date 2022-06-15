@@ -13,14 +13,15 @@ You must have these tools installed to complete the setup:
 2. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
    * `oc create -f bootstrap/`
 3. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
-4. Run the Helm install script
-   * `./install-helm.sh`
-
-# GitOps Application Deployments
-1. Install the Application configuration yaml file pointing to the Application GitOps repository.
-   * `oc create -f java-github-example-app.yaml` 
-2. Install Application External Secrets
+4. Run the Vault install script
+   * `./install-vault.sh`
+5. Install GitHub Runners
+   * TBD
+6. Install Application External Secrets
    * `oc apply -f applications/external-secrets-app.yaml`
+
+Note: 
+> Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click an existing spring-petclinic workflow job and select **Re-run all jobs** from the dropdown list.
 
 # Design
 
@@ -42,6 +43,7 @@ The table below lists the components that this repository deploys or uses.
 | java-github-example image                                                                                              | Container Image | The workflow in the upstream java-github-example source repository publishes its image to Quay.io. New deployments of the example application must provide a place to push the image. This can be a free Quay.io repo.                                                                                                                                                                       |
 | [java-github-example-ops](https://github.com/ploigos/java-github-example-ops)                                          | Git Repository  | The GitOps repository for java-github-example. Contains a helm chart tha is used to deploy the application. During the CI/CD workflow, PSR creates an ArgoCD Application CR referencing the chart. ArgoCD invokes helm when it syncs the Application.                                                                                                                                        |
 | [openshift-actions-runner-chart](https://github.com/ploigos/openshift-actions-runner-chart/)                           | Git Repository  | Contains Helm chart that deploys the GitHub Actions Runner. An Application CR in this repository references it.                                                                                                                                                                                                                                                                              |
+
 
 ## GitOps Workflow
 This repository is used to deploy infrastructure using a GitOps workflow. This diagram shows what happens when an
