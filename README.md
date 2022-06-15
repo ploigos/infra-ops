@@ -27,7 +27,7 @@ You must have these tools installed to complete the setup:
    * `oc apply -f applications/external-secrets-app.yaml`
 
 Note: 
-> Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click an existing spring-petclinic workflow job and select **Re-run all jobs** from the dropdown list.
+> Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click on the Run workflow dropdown, leave the main branch selected, and select Run workflow.
 
 # Design
 
