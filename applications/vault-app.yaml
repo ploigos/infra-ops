@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: devsecops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    chart: vault
+    repoURL: https://helm.releases.hashicorp.com
+    targetRevision: 0.20.1
+    helm:
+      releaseName: vault
+      values: |
+        global:
+          openshift: true
+        server:
+          dev:
+            enabled: true
+          serviceAccount:
+            create: true
+            name: vault-sa
+        injector:
+          enabled: true
+        authDelegator:
+          enabled: true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+      backoff:
+        duration: 15s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
