@@ -1,0 +1,22 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: vault-example
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: vault-backend
+    kind: SecretStore
+  target:
+    name: example-value
+  data:
+    - secretKey: password
+      remoteRef:
+        key: secret/foo
+        property: my-value
+## will create a secret with:
+#kind: Secret
+#metadata:
+#  name: example-value
+#data:
+#  foobar: czNjcjN0
