@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    chart: hashicorp/vault
+    chart: vault
     repoURL: https://helm.releases.hashicorp.com
     targetRevision: 0.20.1
     helm:
@@ -26,8 +26,6 @@ spec:
           enabled: true
         authDelegator:
           enabled: true
-        
-
   destination:
     server: "https://kubernetes.default.svc"
     namespace: vault
