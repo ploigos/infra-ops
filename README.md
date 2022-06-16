@@ -8,14 +8,14 @@ You must have these tools installed to complete the setup:
 - [Helm](https://helm.sh/docs/intro/install/) (version 3.6 or greater) - Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.
 
 ## Install Steps
-1. Login to openshift
+1. Login to openshift.
    * `oc login --token=<YOUR TOKEN> --server=<YOUR SERVER>` (Or username and password instead of token)
 2. Install the OpenShift GitOps Operator and grant it RBAC permissions to install the remaining resources.
    * `oc create -f bootstrap/`
 3. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
-4. Run the Vault install script
-   * `./install-vault.sh`
-5. Install GitHub Runners
+4. Install applications using ArgoCD.
+   * `oc create -f applications/`
+5. Install GitHub Runners.
    * TBD
 6. In the GitHub repository for the spring-petclinic example app, create or update the GitHub Actions secrets used by the ploigos workflow.
    * Browse to https://github.com/ploigos/spring-petclinic/settings/secrets/actions
@@ -23,8 +23,6 @@ You must have these tools installed to complete the setup:
      * *ARGOCDSECRET* - The password for the admin user of the ArgoCD instance running in the devsecops namespace of the OpenShift cluster we just installed. This will have to be updated every time we do the steps above. You can get this value with `oc get secret ploigos-service-account-credentials -n devsecops -o yaml | yq .data.password | base64 -d && echo`
      * *GITUSER* - The username that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we create a new service account or fork the repo into a new organization. The value should be the username of a service account that was created within GitHub for this purpose.
      * *GITPASSWORD* - The password that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we change the password in GitHub or start using a new service account. The value should be the password for a service account that was created within GitHub for this purpose.
-7. Install the External Secrets Operator. This command creates ArgoCD Application CR, which causes ArgoCD to install the operator.
-   * `oc apply -f applications/external-secrets-app.yaml`
 
 Note: 
 > Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click on the Run workflow dropdown, leave the main branch selected, and select Run workflow.
