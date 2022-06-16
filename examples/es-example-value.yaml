@@ -13,10 +13,4 @@ spec:
     - secretKey: password
       remoteRef:
         key: secret/foo
-        property: my-value
-## will create a secret with:
-#kind: Secret
-#metadata:
-#  name: example-value
-#data:
-#  foobar: czNjcjN0
+        property: bar
