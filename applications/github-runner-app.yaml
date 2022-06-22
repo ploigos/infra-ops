@@ -31,28 +31,4 @@ spec:
       backoff:
         duration: 15s
 ---
-apiVersion: v1
-data:
-  token: cm9vdA==
-kind: Secret
-metadata:
-  name: vault-secret
-  namespace: github-runners
-type: Opaque
----
-apiVersion: external-secrets.io/v1beta1
-kind: SecretStore
-metadata:
-  name: vault-backend
-  namespace: github-runners
-spec:
-  provider:
-    vault:
-      server: "http://vault-internal.vault.svc.cluster.local:8200"
-      path: "secret"
-      version: "v2"
-      auth:
-        tokenSecretRef:
-          name: "vault-secret"
-          key: "token"
----
+
