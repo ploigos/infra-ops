@@ -15,8 +15,14 @@ You must have these tools installed to complete the setup:
 3. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the openshift-gitops project.
 4. Install applications using ArgoCD.
    * `oc create -f applications/`
-5. Install GitHub Runners.
-   * TBD
+5. Load secrets into vault by executing the following commands.
+```bash
+oc exec -n vault -it vault-0 -- vault kv put secret/github pat=<your-github-pat>
+oc exec -n vault -it vault-0 -- vault kv put secret/registry0 host=registry.access.redhat.com \
+   user=<your-username> password=<your-password>
+oc exec -n vault -it vault-0 -- vault kv put secret/registry1 host=quay.io \
+   user=<your-username> password=<your-password>
+```
 6. In the GitHub repository for the spring-petclinic example app, create or update the GitHub Actions secrets used by the ploigos workflow.
    * Browse to https://github.com/ploigos/spring-petclinic/settings/secrets/actions
    * Create or update these secrets:
@@ -24,7 +30,7 @@ You must have these tools installed to complete the setup:
      * *GITUSER* - The username that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we create a new service account or fork the repo into a new organization. The value should be the username of a service account that was created within GitHub for this purpose.
      * *GITPASSWORD* - The password that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we change the password in GitHub or start using a new service account. The value should be the password for a service account that was created within GitHub for this purpose.
 
-Note: 
+Note:
 > Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click on the Run workflow dropdown, leave the main branch selected, and select Run workflow.
 
 # Design
