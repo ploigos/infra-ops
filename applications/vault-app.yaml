@@ -39,3 +39,4 @@ spec:
       limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
       backoff:
         duration: 15s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+---
