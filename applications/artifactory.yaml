@@ -16,6 +16,43 @@ spec:
       values: |
         masterKey: 3bda6db32891079ddfff7d30b6149a83095cec3043321b387e535f8de538070c
         joinKey: 8568c0554be28f0462c19e59c677945b0cfa8dafe2ac83d53b9c2010d66a53f8
+        rbac:
+          create: true
+          role:
+            rules:
+              - apiGroups:
+                - security.openshift.io
+                resources:
+                - securitycontextconstraints
+                resourceNames:
+                - anyuid
+                verbs:
+                - use
+        serviceAccount:
+          create: true
+          name: artifactory-sa
+        postgresql:
+          enabled: false
+        additionalResources: |
+          kind: Route
+          apiVersion: route.openshift.io/v1
+          metadata:
+            name: {{ template "artifactory.fullname" . }}
+            namespace: {{ .Release.Namespace }}
+            labels:
+              app: {{ template "artifactory.name" . }}
+              chart: {{ template "artifactory.chart" . }}
+              component: {{ .Values.artifactory.name }}
+              heritage: {{ .Release.Service }}
+              release: {{ .Release.Name }}
+          spec:
+            to:
+              kind: Service
+              name: {{ template "artifactory.nginx.fullname" . }}
+              weight: 100
+            port:
+              targetPort: http
+
   destination:
     server: "https://kubernetes.default.svc"
     namespace: artifactory
