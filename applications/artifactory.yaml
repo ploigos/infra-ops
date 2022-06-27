@@ -14,6 +14,10 @@ spec:
     helm:
       releaseName: artifactory
       values: |
+        artifactory:
+          image:
+            registry: releases-docker.jfrog.io
+            repository: jfrog/artifactory-oss
         masterKey: 3bda6db32891079ddfff7d30b6149a83095cec3043321b387e535f8de538070c
         joinKey: 8568c0554be28f0462c19e59c677945b0cfa8dafe2ac83d53b9c2010d66a53f8
         rbac:
