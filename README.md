@@ -23,12 +23,7 @@ oc exec -n vault -it vault-0 -- vault kv put secret/registry0 host=registry.acce
 oc exec -n vault -it vault-0 -- vault kv put secret/registry1 host=quay.io \
    user=<your-username> password=<your-password>
 ```
-6. In the GitHub repository for the spring-petclinic example app, create or update the GitHub Actions secrets used by the ploigos workflow.
-   * Browse to https://github.com/ploigos/spring-petclinic/settings/secrets/actions
-   * Create or update these secrets:
-     * *ARGOCDSECRET* - The password for the admin user of the ArgoCD instance running in the devsecops namespace of the OpenShift cluster we just installed. This will have to be updated every time we do the steps above. You can get this value with `oc get secret ploigos-service-account-credentials -n devsecops -o yaml | yq .data.password | base64 -d && echo`
-     * *GITUSER* - The username that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we create a new service account or fork the repo into a new organization. The value should be the username of a service account that was created within GitHub for this purpose.
-     * *GITPASSWORD* - The password that the PSR should use to clone and push to the workflow, application and -ops repos. This only needs to be updated when we change the password in GitHub or start using a new service account. The value should be the password for a service account that was created within GitHub for this purpose.
+6. Setup artifactory based on how to instructions below.
 
 Note:
 > Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click on the Run workflow dropdown, leave the main branch selected, and select Run workflow.
@@ -99,12 +94,11 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new container. This resets the state (filesystem) of the runner for the next run.
 
 # How-To
-* Create a secret in Vault
-  * `oc exec vault-0 -n vault -- vault kv put secret/webapp/config username="example" password="example"`
-* Get the vale of a secret in Vault
-  * ` oc exec vault-0 -n vault -- vault kv get secret/webapp/config`
-* Test that vault is working properly
-  * Follow [these instructions](https://learn.hashicorp.com/tutorials/vault/kubernetes-openshift?in=vault/kubernetes#deployment-request-secrets-directly-from-vault)
+* Use vault for secrets
+  * Follow the [examples demo](examples/DEMO.md) 
 
-* Log into Artifactory after initial deployment
+* Set up of Artifactory after initial deployment
   * Access route in artifactory namespace and log in with default credentials: admin/password
+  * Update admin password to something else
+  * Paste license key and save
+  * Add a docker registry called 'container'. With the exception of docker tag retention, leave all defaults. Increase docker tag retention to the amount of tags you'd like to retain.
