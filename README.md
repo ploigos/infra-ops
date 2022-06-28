@@ -99,12 +99,11 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 11. After the workflow finishes, the GitHub Runner container exits (it's just a process, and has logic to do this). OpenShift detects this and starts a new container. This resets the state (filesystem) of the runner for the next run.
 
 # How-To
-* Create a secret in Vault
-  * `oc exec vault-0 -n vault -- vault kv put secret/webapp/config username="example" password="example"`
-* Get the vale of a secret in Vault
-  * ` oc exec vault-0 -n vault -- vault kv get secret/webapp/config`
-* Test that vault is working properly
-  * Follow [these instructions](https://learn.hashicorp.com/tutorials/vault/kubernetes-openshift?in=vault/kubernetes#deployment-request-secrets-directly-from-vault)
+* Use vault for secrets
+  * Follow the [examples demo](examples/DEMO.md) 
 
-* Log into Artifactory after initial deployment
+* Set up of Artifactory after initial deployment
   * Access route in artifactory namespace and log in with default credentials: admin/password
+  * Update admin password to something else
+  * Paste license key and save
+  * Add a docker registry called 'container'. With the exception of docker tag retention, leave all defaults. Increase docker tag retention to the amount of tags you'd like to retain.
