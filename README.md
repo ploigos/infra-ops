@@ -97,8 +97,7 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 * Use vault for secrets
   * Follow the [examples demo](examples/DEMO.md) 
 
-* Set up of Artifactory after initial deployment
-  * Access route in artifactory namespace and log in with default credentials: admin/password
-  * Update admin password to something else
-  * Paste license key and save
-  * Add a docker registry called 'container'. With the exception of docker tag retention, leave all defaults. Increase docker tag retention to the amount of tags you'd like to retain.
+* Set up of Artifactory after initial deployment 
+  * Provide license key if prompted.
+  * Add a docker registry called 'ploigos'. With the exception of docker tag retention, leave all defaults. Increase docker tag retention to the amount of tags you'd like to retain.
+  * Add a new permission called 'ploigos' and give service account access to registry.
