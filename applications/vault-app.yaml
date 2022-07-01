@@ -16,14 +16,23 @@ spec:
       values: |
         global:
           openshift: true
+        injector:
+          enabled: true
+          image:
+            repository: ploigos2.jfrog.io/ploigos/vault-k8s
+            tag: "0.16.1"
+          agentimage:
+            repository: ploigos2.jfrog.io/ploigos/vault
+            tag: "1.10.3"
         server:
+          image:
+            repository: ploigos2.jfrog.io/ploigos/vault
+            tag: "1.10.3"
           dev:
             enabled: true
           serviceAccount:
             create: true
             name: vault-sa
-        injector:
-          enabled: true
         authDelegator:
           enabled: true
   destination:
