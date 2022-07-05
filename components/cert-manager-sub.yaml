@@ -2,13 +2,13 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   labels:
-    operators.coreos.com/external-secrets-operator.openshift-operators: ""
-  name: cert-manager-operator
-  namespace: openshift-operators
+    operators.coreos.com/openshift-cert-manager-operator.openshift-cert-manager-operator: ""
+  name: openshift-cert-manager-operator
+  namespace: openshift-cert-manager-operator
 spec:
   channel: tech-preview
   installPlanApproval: Manual
-  name: cert-manager-operator
+  name: openshift-cert-manager-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: cert-manager.v1.7.1
+  startingCSV: openshift-cert-manager.v1.7.1
