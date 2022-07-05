@@ -22,6 +22,10 @@ oc exec -n vault -it vault-0 -- vault kv put secret/registry0 host=registry.acce
    user=<your-username> password=<your-password>
 oc exec -n vault -it vault-0 -- vault kv put secret/registry1 host=quay.io \
    user=<your-username> password=<your-password>
+oc exec -n vault -it vault-0 -- vault kv put secret/registry2 host=<your-container-registry> \
+   user=<your-username> password=<your-password>
+oc exec -n vault -it vault-0 -- vault kv put secret/argocd username=<your-username> password=<your-password>
+oc exec -n vault -it vault-0 -- vault kv put secret/git username=<your-username> password=<your-github-pat>
 ```
 6. Setup artifactory based on how to instructions below.
 
