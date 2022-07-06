@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd
+  namespace: devsecops
+spec:
+  server:
+    route:
+      enabled: true
+      tls:
+        termination: reencrypt
+        insecureEdgeTerminationPolicy: Redirect
+  rbac:
+    defaultPolicy: 'role:readonly'
+    policy: |
+      g, argocd-admins, role:admin
+    scopes: '[groups]'
