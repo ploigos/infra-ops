@@ -15,7 +15,19 @@ You must have these tools installed to complete the setup:
 3. Wait for the operator to start ArgoCD. This may take a few minutes. You can monitor progress by looking at the Pods in the devsecops project.
 4. Install applications using ArgoCD.
    * `oc create -f applications/`
-5. Load secrets into vault by executing the following commands.
+5. If using an internal registry requiring authentication, run the following commands.
+```bash
+oc -n vault create secret docker-registry pull-secret --docker-server ploigos2.jfrog.io --docker-username <user> --docker-password <password>
+oc -n vault secrets link vault-sa pull-secret --for=pull
+oc -n vault secrets link vault-agent-injector pull-secret --for=pull
+oc -n external-secrets create secret docker-registry pull-secret --docker-server ploigos2.jfrog.io --docker-username <user> --docker-password <password>
+oc -n external-secrets secrets link external-secrets pull-secret --for=pull
+oc -n external-secrets secrets link external-secrets-cert-controller pull-secret --for=pull
+oc -n external-secrets secrets link external-secrets-webhook pull-secret --for=pull
+oc -n github-runners create secret docker-registry pull-secret --docker-server ploigos2.jfrog.io --docker-username <user> --docker-password <password>
+oc -n github-runners secrets link buildah-sa pull-secret --for=pull
+```
+6. Load secrets into vault by executing the following commands.
 ```bash
 oc exec -n vault -it vault-0 -- vault kv put secret/github pat=<your-github-pat>
 oc exec -n vault -it vault-0 -- vault kv put secret/registry0 host=registry.access.redhat.com \
