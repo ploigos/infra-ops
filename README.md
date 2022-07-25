@@ -17,14 +17,14 @@ You must have these tools installed to complete the setup:
    * `oc create -f applications/`
 5. If using an internal registry requiring authentication, run the following commands.
 ```bash
-oc -n vault create secret docker-registry pull-secret --docker-server ploigos2.jfrog.io --docker-username <user> --docker-password <password>
+oc -n vault create secret docker-registry pull-secret --docker-server <your-container-registry> --docker-username <user> --docker-password <password>
 oc -n vault secrets link vault-sa pull-secret --for=pull
 oc -n vault secrets link vault-agent-injector pull-secret --for=pull
-oc -n external-secrets create secret docker-registry pull-secret --docker-server ploigos2.jfrog.io --docker-username <user> --docker-password <password>
+oc -n external-secrets create secret docker-registry pull-secret --docker-server <your-container-registry> --docker-username <user> --docker-password <password>
 oc -n external-secrets secrets link external-secrets pull-secret --for=pull
 oc -n external-secrets secrets link external-secrets-cert-controller pull-secret --for=pull
 oc -n external-secrets secrets link external-secrets-webhook pull-secret --for=pull
-oc -n github-runners create secret docker-registry pull-secret --docker-server ploigos2.jfrog.io --docker-username <user> --docker-password <password>
+oc -n github-runners create secret docker-registry pull-secret --docker-server <your-container-registry> --docker-username <user> --docker-password <password>
 oc -n github-runners secrets link buildah-sa pull-secret --for=pull
 ```
 6. Load secrets into vault by executing the following commands.
