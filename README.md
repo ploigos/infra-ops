@@ -38,6 +38,17 @@ oc exec -n vault -it vault-0 -- vault kv put secret/registry2 host=<your-contain
    user=<your-username> password=<your-password>
 oc exec -n vault -it vault-0 -- vault kv put secret/argocd username=<your-username> password=<your-password>
 oc exec -n vault -it vault-0 -- vault kv put secret/git username=<your-username> password=<your-github-pat>
+
+#Load in gpg key to var
+export GPG_KEY=`cat << EOM
+                                         -----BEGIN PGP PRIVATE KEY BLOCK-----
+
+        <your-gpg-key>
+        -----END PGP PRIVATE KEY BLOCK-----
+EOM`
+
+#Upload key to vault. Quotes around var required to maintain newlines and spacing
+oc exec -n vault -it vault-0 -- vault kv put secret/podmansign sign-container-image-private-key="${GPG_KEY}"
 ```
 6. Setup artifactory based on how to instructions below.
 
