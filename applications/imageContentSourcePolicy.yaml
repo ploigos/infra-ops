@@ -1,0 +1,26 @@
+apiVersion: operator.openshift.io/v1alpha1
+kind: ImageContentSourcePolicy
+metadata:
+  labels:
+    operators.openshift.org/catalog: "true"
+  name: catalog-0
+spec:
+  repositoryDigestMirrors:
+    - mirrors:
+        - nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/redhat
+      source: registry.redhat.io/redhat
+    - mirrors:
+        - nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/openshift-gitops-1
+      source: registry.redhat.io/openshift-gitops-1
+    - mirrors:
+        - nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/rhel8
+      source: registry.redhat.io/rhel8
+    - mirrors:
+        - nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/cert-manager
+      source: registry.redhat.io/cert-manager
+    - mirrors:
+        - nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/openshift4
+      source: registry.redhat.io/openshift4
+    - mirrors:
+        - nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/rh-sso-7
+      source: registry.redhat.io/rh-sso-7
