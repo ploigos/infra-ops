@@ -19,14 +19,14 @@ spec:
         injector:
           enabled: true
           image:
-            repository: nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/ploigos/vault-k8s
+            repository: nexus-docker-devsecops.apps.eekzz70r.eastus.aroapp.io/ploigos/vault-k8s
             tag: "0.16.1"
           agentimage:
-            repository: nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/ploigos/vault
+            repository: nexus-docker-devsecops.apps.eekzz70r.eastus.aroapp.io/ploigos/vault
             tag: "1.10.3"
         server:
           image:
-            repository: nexus-docker-devsecops.apps.n7qzypo3.eastus.aroapp.io/ploigos/vault
+            repository: nexus-docker-devsecops.apps.eekzz70r.eastus.aroapp.io/ploigos/vault
             tag: "1.10.3"
           dev:
             enabled: true
