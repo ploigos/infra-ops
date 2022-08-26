@@ -19,14 +19,14 @@ spec:
         injector:
           enabled: true
           image:
-            repository: nexus-docker-devsecops.apps.cluster-q7vt2.q7vt2.sandbox1639.opentlc.com/ploigos/vault-k8s
+            repository: nexus-docker-devsecops.apps.cluster-hpt9v.hpt9v.sandbox277.opentlc.com/ploigos/vault-k8s
             tag: "0.16.1"
           agentimage:
-            repository: nexus-docker-devsecops.apps.cluster-q7vt2.q7vt2.sandbox1639.opentlc.com/ploigos/vault
+            repository: nexus-docker-devsecops.apps.cluster-hpt9v.hpt9v.sandbox277.opentlc.com/ploigos/vault
             tag: "1.10.3"
         server:
           image:
-            repository: nexus-docker-devsecops.apps.cluster-q7vt2.q7vt2.sandbox1639.opentlc.com/ploigos/vault
+            repository: nexus-docker-devsecops.apps.cluster-hpt9v.hpt9v.sandbox277.opentlc.com/ploigos/vault
             tag: "1.10.3"
           dev:
             enabled: true
