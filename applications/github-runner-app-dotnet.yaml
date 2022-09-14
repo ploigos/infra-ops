@@ -19,6 +19,8 @@ spec:
           value: "1"
         - name: runnerTag
           value: "feature-dotnet-generate-metadata"
+        - name: runnerLabels
+          value: [self-hosted, python, dotnet]
   destination:
     server: "https://kubernetes.default.svc"
     namespace: github-runners
