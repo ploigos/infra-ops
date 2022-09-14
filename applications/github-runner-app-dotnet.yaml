@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: github-runners
+  namespace: devsecops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ploigos/openshift-actions-runner-chart
+    path: ./
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: replicas
+          value: "1"
+        - name: runnerTag
+          value: "feature-dotnet-generate-metadata"
+        - name: runnerLabels
+          value: [self-hosted, python, dotnet]
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: github-runners
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+      backoff:
+        duration: 15s
+---
+
