@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: github-runners
+  name: github-runners-dotnet
   namespace: devsecops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -16,14 +16,18 @@ spec:
         - values.yaml
       parameters:
         - name: replicas
-          value: "1"
+          value: "5"
         - name: runnerTag
           value: "feature-dotnet-generate-metadata"
-        - name: runnerLabels
-          value: [self-hosted, python, dotnet]
+        - name: runnerLabels[0]
+          value: "self-hosted"
+        - name: runnerLabels[1]
+          value: "python"
+        - name: runnerLabels[2]
+          value: "dotnet"
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: github-runners
+    namespace: github-runners-dotnet
   syncPolicy:
     automated:
       prune: true
