@@ -27,30 +27,60 @@ oc -n external-secrets secrets link external-secrets-webhook pull-secret --for=p
 oc -n github-runners create secret docker-registry pull-secret --docker-server <your-container-registry> --docker-username <user> --docker-password <password>
 oc -n github-runners secrets link buildah-sa pull-secret --for=pull
 ```
-6. Load secrets into vault by executing the following commands.
+6. Configure Vault to talk to External Secrets operator.
 ```bash
-oc exec -n vault -it vault-0 -- vault kv put secret/github pat=<your-github-pat>
+oc exec -n vault -it vault-0 -- vault auth enable kubernetes
+VAULT_SA_SECRET=$(oc get -n github-runners sa vault-k8s -o jsonpath='{.secrets[*].name}' | grep -wo vault-k8s-token-.* | sed "s/ .*//")
+VAULT_SA_TOKEN=$(oc get -n github-runners secret $VAULT_SA_SECRET -o jsonpath='{.data.token}' | base64 -d)
+VAULT_SA_CA=$(oc get -n github-runners secret $VAULT_SA_SECRET -o jsonpath='{.data.ca\.crt}' | base64 -d)
+OPENSHIFT_API_URL=$(oc config view --minify -o jsonpath='{.clusters[*].cluster.server}')
+oc exec -n vault -it vault-0 -- vault write auth/kubernetes/config token_reviewer_jwt="$VAULT_SA_TOKEN" kubernetes_host="$OPENSHIFT_API_URL" kubernetes_ca_cert="$VAULT_SA_CA"
+oc exec -n vault vault-0 -- /bin/sh -c 'cat <<EOF > /tmp/es_policy.hcl
+path "secret/*" {
+  capabilities = ["read"]
+}
+EOF'
+oc exec -n vault -it vault-0 -- vault policy write external-secrets /tmp/es_policy.hcl
+oc exec -n vault -it vault-0 -- vault write auth/kubernetes/role/vault-k8s \
+             bound_service_account_names=vault-k8s \
+             bound_service_account_namespaces=github-runners \
+             policies=external-secrets \
+             ttl=24h
+oc exec -n vault -it vault-0 -- rm /tmp/es_policy.hcl
+echo "Kubernetes Auth is configured!"
+```
+7. Load secrets into vault by executing the following commands.
+```bash
 oc exec -n vault -it vault-0 -- vault kv put secret/registry0 host=registry.access.redhat.com \
    user=<your-username> password=<your-password>
 oc exec -n vault -it vault-0 -- vault kv put secret/registry1 host=quay.io \
    user=<your-username> password=<your-password>
 oc exec -n vault -it vault-0 -- vault kv put secret/registry2 host=<your-container-registry> \
    user=<your-username> password=<your-password>
+oc exec -n vault -it vault-0 -- vault kv put secret/mvn host=<your-mvn-server> \
+                       id=maven-releases user=<your-username> password=<your-password>
 oc exec -n vault -it vault-0 -- vault kv put secret/argocd username=<your-username> password=<your-password>
 oc exec -n vault -it vault-0 -- vault kv put secret/git username=<your-username> password=<your-github-pat>
 
 #Load in gpg key to var
 export GPG_KEY=`cat << EOM
                                          -----BEGIN PGP PRIVATE KEY BLOCK-----
-
         <your-gpg-key>
         -----END PGP PRIVATE KEY BLOCK-----
 EOM`
 
 #Upload key to vault. Quotes around var required to maintain newlines and spacing
 oc exec -n vault -it vault-0 -- vault kv put secret/podmansign sign-container-image-private-key="${GPG_KEY}"
+
+#Load in github app private key to var
+export GITHUBAPP_PEM=`cat << EOM
+-----BEGIN RSA PRIVATE KEY-----
+<your-private-key>
+-----END RSA PRIVATE KEY-----
+EOM`
+
+oc exec -n vault -it vault-0 -- vault kv put secret/githubapp id="<your-app-id>" installid="<your-install-id>" pem="${GITHUBAPP_PEM}"
 ```
-6. Setup artifactory based on how to instructions below.
 
 Note:
 > Run the spring-petclinic pipeline to ensure that everything works by navigating to the [application workflow page](https://github.com/ploigos/spring-petclinic/actions/workflows/main.yaml). Click on the Run workflow dropdown, leave the main branch selected, and select Run workflow.
@@ -123,8 +153,3 @@ various parts of the infrastructure interact when a CI/CD workflow is executed.
 # How-To
 * Use vault for secrets
   * Follow the [examples demo](examples/DEMO.md) 
-
-* Set up of Artifactory after initial deployment 
-  * Provide license key if prompted.
-  * Add a docker registry called 'ploigos'. With the exception of docker tag retention, leave all defaults. Increase docker tag retention to the amount of tags you'd like to retain.
-  * Add a new permission called 'ploigos' and give service account access to registry.
